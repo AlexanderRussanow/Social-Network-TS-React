@@ -1,5 +1,5 @@
 import React, { Component, Profiler } from 'react'
-import { Route, withRouter } from 'react-router-dom';
+import { HashRouter, Route, withRouter } from 'react-router-dom';
 import './App.css';
 import DialogsContainer from './components/dialogs/dialogsContainer';
 import Music from './components/music/music';
@@ -60,11 +60,11 @@ let AppContainer = compose(
   connect(mapStateToProps, { initializeApp }))(App);
 
 let MainApp = (props) => {
-  return <BrowserRouter basename={process.env.PUBLIC_URL}>
+  return <HashRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <AppContainer />
     </Provider>
-  </BrowserRouter>
+  </HashRouter>
 }
 
 export default MainApp
