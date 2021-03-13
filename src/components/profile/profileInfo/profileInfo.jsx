@@ -4,15 +4,22 @@ import s from "./ProfileInfo.module.css";
 import ava from './../../assets/images/ava_new.jpg'
 import ProfileStatusWithHooks from "./ProfileStatusHooks";
 
-const ProfileInfo = ({profile, status, updateStatus}) => {
+const ProfileInfo = ({profile, status, updateStatus, isOwner, savePhoto}) => {
   if (!profile) {
     return <Preloader />;
+  }
+
+  const oNMainPhotoSelected = (e) => {
+     if (e.target.files.length) {
+       savePhoto(e.target.files[0])
+     }
   }
 
   return (
     <div>
       <div className={s.descriptionBlock}>
         <img className={s.photo} src={profile.photos.large || ava} />
+        {isOwner && <div><input type={'file'} onChange={oNMainPhotoSelected}/></div>}
         <ProfileStatusWithHooks status={status} updateStatus={updateStatus}/>
         <div></div>
         <h2>{profile.fullName}</h2>
