@@ -19,21 +19,45 @@ import {
   getFetchingSelector,
   getUsersSuper,
 } from "../../redux/usersSelectors";
+import { UsersType } from "../../types/types";
+import { AppStateType } from "../../redux/redux-store";
 
-class UsersContainer extends React.Component {
+type MapStateToPropsType = {
+  currentPage: number;
+  pageSize: number;
+  isFetching: boolean;
+  totalItemsCount: number;
+  users: Array<UsersType>;
+  followingInProgress: Array<number>;
+}
+
+type MapDispatchToPropsType = {
+  getUsers: (currentPage: number, pageSize: number) => void;
+  follow: (userId: number) => void;
+  unfollow: (userId: number) => void;
+}
+
+type OwnPropsType = {
+  pageTitle: string;
+}
+
+type PropsType = MapStateToPropsType & MapDispatchToPropsType & OwnPropsType;
+
+class UsersContainer extends React.Component<PropsType> {
   componentDidMount() {
-    let {currentPage, pageSize} = this.props
+    let { currentPage, pageSize } = this.props;
     this.props.getUsers(currentPage, pageSize);
   }
 
-  onPageChanged = (pageNumber) => {
-    let {pageSize} = this.props
+  onPageChanged = (pageNumber: number) => {
+    let { pageSize } = this.props;
     this.props.getUsers(pageNumber, pageSize);
   };
 
   render() {
     return (
       <>
+        <h2>{this.props.pageTitle}</h2>
         {this.props.isFetching ? <Preloader /> : null}
         <Users
           totalItemsCount={this.props.totalItemsCount}
@@ -43,15 +67,15 @@ class UsersContainer extends React.Component {
           onPageChanged={this.onPageChanged}
           unfollow={this.props.unfollow}
           follow={this.props.follow}
-          toggleInFollowingProgress={this.props.toggleInFollowingProgress}
           followingInProgress={this.props.followingInProgress}
+          // toggleInFollowingProgress={this.props.toggleInFollowingProgress}
         />
       </>
     );
   }
 }
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
   return {
     users: getUsersSuper(state),
     pageSize: getPageSizeSelector(state),
@@ -64,11 +88,10 @@ let mapStateToProps = (state) => {
 
 export default compose(
   withAuthRedirect,
-  connect(mapStateToProps, {
+  connect<MapStateToPropsType, MapDispatchToPropsType, OwnPropsType, AppStateType>
+  (mapStateToProps, {
     follow,
     unfollow,
-    setCurrentPages,
-    toggleInFollowingProgress,
     getUsers,
   })
 )(UsersContainer);
