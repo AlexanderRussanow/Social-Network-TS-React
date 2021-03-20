@@ -1,4 +1,5 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { createStore, combineReducers, applyMiddleware, compose, Action } from 'redux'
+import { ThunkAction } from "redux-thunk";
 import authReducer from './auth-reducer'
 import dialogsReducer from "./dialogs-Reducer"
 import profileReducer from "./profile-Reducer"
@@ -25,9 +26,10 @@ let rootReducers = combineReducers({
 export type AppStateType = ReturnType<typeof rootReducers>
 
 type PropertiesType<T> = T extends {[key: string]: infer U} ? U : never
-
 export type InferActionsType<T extends {[key: string]: (...args: any[]) => any}> = ReturnType<PropertiesType<T>>
 
+
+export type BaseThunkType<AT extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, AT>;
 // let state: AppStateType
 
 // @ts-ignore
