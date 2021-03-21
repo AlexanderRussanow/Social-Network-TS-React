@@ -5,6 +5,11 @@ import { PhotosType, PostDataType, ProfileType } from './../types/types';
 import { BaseThunkType, InferActionsType } from "./redux-store";
 
 
+type InitialStateType = typeof initialState;
+type ActionType = InferActionsType <typeof actions>
+type ThunkType = BaseThunkType<ActionType | FormAction >
+
+
 let initialState = {
   postData: [
     { id: 1, message: "Hi, how are you?", like: 23 },
@@ -16,10 +21,7 @@ let initialState = {
   newPostText: "",
 };
 
-export type InitialStateType = typeof initialState;
-type ActionType = InferActionsType <typeof actions>
-// type DispatchType = Dispatch <ActionType>
-type ThunkType = BaseThunkType<ActionType | FormAction >
+
 
 const profileReducer = (state = initialState, action: ActionType): InitialStateType => {
   switch (action.type) {

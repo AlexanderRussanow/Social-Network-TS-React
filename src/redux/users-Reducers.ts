@@ -4,6 +4,12 @@ import { updateObjectInArray } from "../utils/object-helpers";
 import { UsersType } from "./../types/types";
 import { Dispatch } from "redux";
 
+type InitialStateType = typeof initialState;
+type ActionsTypes = InferActionsType<typeof actions>;
+type DispatchType = Dispatch<ActionsTypes>;
+type ThunkType = BaseThunkType<ActionsTypes>
+
+
 let initialState = {
   users: [] as Array<UsersType>,
   pageSize: 10,
@@ -12,8 +18,6 @@ let initialState = {
   isFetching: true,
   followingInProgress: [] as Array<number>, // array of users Id
 };
-
-type InitialStateType = typeof initialState;
 
 const usersReducer = (
   state = initialState,
@@ -61,9 +65,7 @@ const usersReducer = (
   }
 };
 
-type ActionsTypes = InferActionsType<typeof actions>;
-type DispatchType = Dispatch<ActionsTypes>;
-type ThunkType = BaseThunkType<ActionsTypes>
+
 
 export const actions = {
   followSuccess: (userId: number) => ({ type: "FOLLOW", userId } as const),

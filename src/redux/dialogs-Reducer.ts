@@ -10,6 +10,10 @@ type MessageTextType = {
   id: number;
   message: string;
 };
+type ActionType =  InferActionsType<typeof actions>
+export type InitialStateType = typeof initialState;
+
+
 
 let initialState = {
   dialogsData: [
@@ -33,8 +37,6 @@ let initialState = {
   ] as Array<MessageTextType>,
 };
 
-export type InitialStateType = typeof initialState;
-
 const dialogsReducer = (
   state = initialState,
   action: ActionType
@@ -50,8 +52,6 @@ const dialogsReducer = (
       return state;
   }
 };
-
-type ActionType =  InferActionsType<typeof actions>
 
 export const actions = {
   sendMessageActionCreator: (newMessageBody: string) => {return { type: "SN/DIALOGS/SEND-MESSAGE", newMessageBody} as const}

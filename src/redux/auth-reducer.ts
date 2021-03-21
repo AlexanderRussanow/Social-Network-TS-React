@@ -1,5 +1,3 @@
-// import { login } from './auth-reducer';
-// import { connectAdvanced } from "react-redux";
 import { Action } from "redux";
 import { FormAction, stopSubmit } from "redux-form";
 import { ResultCodesEnum, ResultCodeForCaptchaEnum } from "../api/api";
@@ -35,15 +33,6 @@ const authReducer = (
       return state;
   }
 };
-
-// actioncreator
-
-// type PayloadType = {
-//     id: number | null
-//     email: string | null
-//     login: string | null
-//     isAuth: boolean
-// }
 
 export const actions = {
   setUserData: (
