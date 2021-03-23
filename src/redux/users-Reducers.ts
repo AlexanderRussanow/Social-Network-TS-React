@@ -28,7 +28,7 @@ const usersReducer = (
       return {
         ...state,
         users: updateObjectInArray(state.users, action.userId, "id", {
-          following: true,
+          followed: true,
         }),
       };
 
@@ -36,7 +36,7 @@ const usersReducer = (
       return {
         ...state,
         users: updateObjectInArray(state.users, action.userId, "id", {
-          following: false,
+          followed: false,
         }),
       };
 
@@ -57,7 +57,7 @@ const usersReducer = (
         ...state,
         followingInProgress: action.isFetching
           ? [...state.followingInProgress, action.userId]
-          : state.followingInProgress.filter((id) => id !== action.userId),
+          : state.followingInProgress.filter((id) => id != action.userId),
       };
 
     default:
@@ -112,7 +112,7 @@ const _followUnfollowFlow = async (
 
 export const follow = (userId: number): ThunkType => {
   return async (dispatch) => {
-    _followUnfollowFlow(
+   await _followUnfollowFlow(
       dispatch,
       userId,
       usersAPI.follow.bind(usersAPI),
@@ -123,7 +123,7 @@ export const follow = (userId: number): ThunkType => {
 
 export const unfollow = (userId: number): ThunkType => {
   return async (dispatch) => {
-    _followUnfollowFlow(
+    await _followUnfollowFlow(
       dispatch,
       userId,
       usersAPI.unfollow.bind(usersAPI),

@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Preloader from "../../common/preloader/preloader";
 import s from "./ProfileInfo.module.css";
 import ava from "./../../assets/images/ava_new.jpg";
 import ProfileStatusWithHooks from "./ProfileStatusHooks";
 import ProfileDataForm from "./ProfileDataForm";
+import { ContactsType, ProfileType } from "../../../types/types";
 
-const ProfileInfo = ({
+
+type PropsType = {
+  profile: ProfileType | null
+  status: string
+  updateStatus: (status: string) => void
+  isOwner: boolean
+  savePhoto: (file: File) => void
+  saveProfile: (profile: ProfileType) => Promise<any>
+}
+
+const ProfileInfo: React.FC<PropsType> = ({
   profile,
   status,
   updateStatus,
@@ -19,13 +30,13 @@ const ProfileInfo = ({
     return <Preloader />;
   }
 
-  const oNMainPhotoSelected = (e) => {
-    if (e.target.files.length) {
+  const oNMainPhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length) {
       savePhoto(e.target.files[0]);
     }
   };
 
-  const onSubmit = (formData) => {
+  const onSubmit = (formData: ProfileType) => {
     saveProfile(formData).then(
       () => {
         setEditMode(false)
@@ -67,7 +78,13 @@ const ProfileInfo = ({
   );
 };
 
-const Contact = ({ contactTitle, contactValue }) => {
+
+type ContactsPropsType = {
+  contactTitle: string
+  contactValue: string 
+}
+
+const Contact: React.FC<ContactsPropsType> = ({ contactTitle, contactValue }) => {
     return (
       <div>
         <b>{contactTitle}</b>
@@ -76,7 +93,13 @@ const Contact = ({ contactTitle, contactValue }) => {
     );
 };
 
-const ProfileData = ({ profile, isOwner, toEditMode }) => {
+type ProfileDataPropsType = {
+  profile: ProfileType
+  isOwner: boolean
+  toEditMode: () => void
+}
+
+const ProfileData: React.FC<ProfileDataPropsType> = ({ profile, isOwner, toEditMode }) => {
   return (
     <div>
       {isOwner && (
@@ -103,7 +126,7 @@ const ProfileData = ({ profile, isOwner, toEditMode }) => {
             <Contact
               key={key}
               contactTitle={key}
-              contactValue={profile.contacts[key]}
+              contactValue={profile.contacts[key as keyof ContactsType]}
             />
           );
         })}</div>

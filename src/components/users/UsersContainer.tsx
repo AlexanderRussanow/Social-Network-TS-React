@@ -92,7 +92,7 @@ export default compose(
     unfollow,
     getUsers,
   })
-)(UsersContainer);
+)(UsersContainer) ;
 
 // let mapDispatchToProps = (dispatch) => {
 //   return {

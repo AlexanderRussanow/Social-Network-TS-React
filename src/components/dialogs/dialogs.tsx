@@ -3,12 +3,31 @@ import DialogItem from "./dialogItem/dialogItems";
 import Message from "./dialogMessage/dialogsMessages";
 import s from "./dialogs.module.css";
 import { Field, reduxForm } from "redux-form";
-import { TextArea } from "../common/formControls/formControls";
+import { createField, TextArea } from "../common/formControls/formControls";
 import { maxLengthCreator, required } from "../../utils/validators/validarot";
+import { InitialStateType } from "../../redux/dialogs-Reducer";
+import { Redirect } from "react-router";
+import { InjectedFormProps } from "redux-form";
 
 const maxLengthCreator100 = maxLengthCreator(100)
 
-const Dialogs = (props) => {
+type DialogsPropsType = {
+  dialogPage: InitialStateType
+  sendMessage: (messageText: string) => void
+ 
+}
+
+type NewMessageFormValuesType = {
+  email: string,
+   password: string, 
+   rememberMe: boolean, 
+   newMessageBody: string
+}
+
+type NewMessageFormValuesTypeKeys = Extract<keyof NewMessageFormValuesType, string>
+type PropsType = {}
+
+const Dialogs: React.FC<DialogsPropsType> = (props) => {
   let state = props.dialogPage;
 
   let messageElements = state.messageText.map((t) => (
@@ -20,9 +39,10 @@ const Dialogs = (props) => {
   ));
 
 
-  let addNewMessage = (values) => {
-    props.sendMessageCreator(values.newMessageBody)    
+  let addNewMessage = (values: NewMessageFormValuesType) => {
+    props.sendMessage(values.newMessageBody)    
   };
+
 
   return (
     <div>
@@ -39,15 +59,12 @@ const Dialogs = (props) => {
   );
 };
 
-const AddMessageForm = (props) => {
+const AddMessageForm: React.FC<InjectedFormProps<NewMessageFormValuesType, PropsType> & PropsType> = (props) => {
   return (
     <form onSubmit={props.handleSubmit}>
-      <Field
-        component={TextArea}
-        validate={[required, maxLengthCreator100]}
-        name={"newMessageBody"}
-        placeholder={"enter your messge"}
-      />
+            {createField<NewMessageFormValuesTypeKeys>("enter your message", "newMessageBody", [required, maxLengthCreator100], TextArea)}
+
+  
       <div>
         <button>Send...</button>
       </div>
@@ -55,7 +72,7 @@ const AddMessageForm = (props) => {
   );
 };
 
-const ReduxAddMessageForm = reduxForm({
+const ReduxAddMessageForm = reduxForm<NewMessageFormValuesType>({
   form: "addMessage",
 })(AddMessageForm);
 

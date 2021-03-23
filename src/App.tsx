@@ -1,4 +1,4 @@
-import React, { Component, Profiler } from 'react'
+import React, { Component, ComponentType, Profiler } from 'react'
 import { HashRouter, Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import './App.css';
 import DialogsContainer from './components/dialogs/dialogsContainer';
@@ -12,16 +12,19 @@ import Games from './components/games/games'
 import HeaderComponent from './components/header/headerComponent';
 import LoginPage from './components/login/login'
 import { connect } from 'react-redux';
-import { initializeApp } from "../../react_kabzda_1/src/redux/app-reducer";
+import { initializeApp } from "./redux/app-reducer";
 import Preloader from './components/common/preloader/preloader';
 import { compose } from 'redux';
-import store from './redux/redux-store'
+import store, { AppStateType } from './redux/redux-store'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom';
 
+type MapPropsType = ReturnType<typeof mapStateToProps>
+type DispatchPropsType = {
+  initializeApp: () => void 
+}
 
-
-class App extends Component {
+class App extends Component<MapPropsType & DispatchPropsType> {
   componentDidMount() {
     this.props.initializeApp()
   }
@@ -30,9 +33,7 @@ class App extends Component {
     if (!this.props.initialized) {
       return <Preloader />
     }
-
     return (
-
       <div className='app-wrapper'>
         <HeaderComponent />
         <Navbar />
@@ -55,15 +56,15 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: AppStateType) => ({
   initialized: state.app.initialized
 })
 
-let AppContainer = compose(
+let AppContainer = compose<ComponentType>(
   withRouter,
   connect(mapStateToProps, { initializeApp }))(App);
 
-let MainApp = (props) => {
+let MainApp: React.FC = () => {
   return <HashRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <AppContainer />
