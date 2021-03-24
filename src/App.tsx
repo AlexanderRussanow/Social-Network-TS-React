@@ -1,4 +1,4 @@
-import React, { Component, ComponentType, Profiler } from 'react'
+import React, { Component, ComponentType } from 'react'
 import { HashRouter, Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import './App.css';
 import DialogsContainer from './components/dialogs/dialogsContainer';
@@ -17,7 +17,6 @@ import Preloader from './components/common/preloader/preloader';
 import { compose } from 'redux';
 import store, { AppStateType } from './redux/redux-store'
 import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom';
 
 type MapPropsType = ReturnType<typeof mapStateToProps>
 type DispatchPropsType = {

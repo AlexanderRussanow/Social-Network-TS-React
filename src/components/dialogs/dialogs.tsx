@@ -2,11 +2,10 @@ import React from "react";
 import DialogItem from "./dialogItem/dialogItems";
 import Message from "./dialogMessage/dialogsMessages";
 import s from "./dialogs.module.css";
-import { Field, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import { createField, TextArea } from "../common/formControls/formControls";
 import { maxLengthCreator, required } from "../../utils/validators/validarot";
 import { InitialStateType } from "../../redux/dialogs-Reducer";
-import { Redirect } from "react-router";
 import { InjectedFormProps } from "redux-form";
 
 const maxLengthCreator100 = maxLengthCreator(100)

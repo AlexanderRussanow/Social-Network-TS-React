@@ -1,4 +1,4 @@
-import { Dispatch } from "redux";
+
 import { FormAction, stopSubmit } from "redux-form";
 import { profileAPI } from "../api/profileAPI";
 import { PhotosType, PostDataType, ProfileType } from './../types/types';
@@ -52,7 +52,7 @@ const profileReducer = (state = initialState, action: ActionType): InitialStateT
     case "SN/PROFILE/DELETE-POST": {
       return {
         ...state,
-        postData: state.postData.filter((p) => p.id != action.postId),
+        postData: state.postData.filter((p) => p.id !== action.postId),
       };
     }
     case "SN/PROFILE/UPDATE-PHOTO": {

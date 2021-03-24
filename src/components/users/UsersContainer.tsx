@@ -57,16 +57,15 @@ class UsersContainer extends React.Component<PropsType> {
       <>
         <h2>{this.props.pageTitle}</h2>
         {this.props.isFetching ? <Preloader /> : null}
-        <Users
-          totalItemsCount={this.props.totalItemsCount}
-          pageSize={this.props.pageSize}
-          users={this.props.users}
-          currentPage={this.props.currentPage}
-          onPageChanged={this.onPageChanged}
-          unfollow={this.props.unfollow}
-          follow={this.props.follow}
-          followingInProgress={this.props.followingInProgress}
-          // toggleInFollowingProgress={this.props.toggleInFollowingProgress}
+        <Users totalItemsCount={this.props.totalItemsCount}
+            pageSize={this.props.pageSize}
+            users={this.props.users}
+            currentPage={this.props.currentPage}
+            onPageChanged={this.onPageChanged}
+            unfollow={this.props.unfollow}
+            follow={this.props.follow}
+            followingInProgress={this.props.followingInProgress}
+            // toggleInFollowingProgress={this.props.toggleInFollowingProgress}
         />
       </>
     );
@@ -85,14 +84,16 @@ let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 };
 
 export default compose(
-  withAuthRedirect,
   connect<MapStateToPropsType, MapDispatchToPropsType, OwnPropsType, AppStateType>
   (mapStateToProps, {
     follow,
     unfollow,
-    getUsers,
+    getUsers
   })
 )(UsersContainer) ;
+
+
+// withAuthRedirect
 
 // let mapDispatchToProps = (dispatch) => {
 //   return {

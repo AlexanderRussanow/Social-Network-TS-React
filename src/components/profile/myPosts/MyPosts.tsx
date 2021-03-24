@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react";
-import { reduxForm, Field, InjectedFormProps } from "redux-form";
+import React from "react";
+import { reduxForm, InjectedFormProps } from "redux-form";
 import { PostDataType } from "../../../types/types";
 import {
   maxLengthCreator,

@@ -1,4 +1,4 @@
-import { Action } from "redux";
+
 import { FormAction, stopSubmit } from "redux-form";
 import { ResultCodesEnum, ResultCodeForCaptchaEnum } from "../api/api";
 import { authAPI } from "../api/authAPI";

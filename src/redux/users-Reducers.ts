@@ -1,4 +1,4 @@
-import { AppStateType, BaseThunkType, InferActionsType } from "./redux-store";
+import { BaseThunkType, InferActionsType } from "./redux-store";
 import { usersAPI } from "./../api/usersAPI";
 import { updateObjectInArray } from "../utils/object-helpers";
 import { UsersType } from "./../types/types";
@@ -57,7 +57,7 @@ const usersReducer = (
         ...state,
         followingInProgress: action.isFetching
           ? [...state.followingInProgress, action.userId]
-          : state.followingInProgress.filter((id) => id != action.userId),
+          : state.followingInProgress.filter((id) => id !== action.userId),
       };
 
     default:
