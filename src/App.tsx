@@ -1,22 +1,21 @@
-import React, { Component, ComponentType } from 'react'
+import React, { Component, ComponentType } from 'react';
+import { connect, Provider } from 'react-redux';
 import { HashRouter, Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 import './App.css';
+import Preloader from './components/common/preloader/preloader';
 import DialogsContainer from './components/dialogs/dialogsContainer';
+import Games from './components/games/games';
+import HeaderComponent from './components/header/headerComponent';
+import { LoginPage } from './components/login/login';
 import Music from './components/music/music';
 import Navbar from './components/navbar/Navbar';
 import News from './components/news/news';
 import ProfileContainer from './components/profile/profileContainer';
 import Settingss from './components/settingss/settingss';
-import UsersContainer from './components/users/UsersContainer';
-import Games from './components/games/games'
-import HeaderComponent from './components/header/headerComponent';
-import LoginPage from './components/login/login'
-import { connect } from 'react-redux';
+import { UsersPage } from './components/users/UsersContainer';
 import { initializeApp } from "./redux/app-reducer";
-import Preloader from './components/common/preloader/preloader';
-import { compose } from 'redux';
-import store, { AppStateType } from './redux/redux-store'
-import { Provider } from 'react-redux'
+import store, { AppStateType } from './redux/redux-store';
 
 type MapPropsType = ReturnType<typeof mapStateToProps>
 type DispatchPropsType = {
@@ -44,7 +43,7 @@ class App extends Component<MapPropsType & DispatchPropsType> {
             <Route path='/news' render={() => <News />} />
             <Route path='/music' render={() => <Music />} />
             <Route path='/settingss' render={() => <Settingss />} />
-            <Route path='/users' render={() => <UsersContainer pageTitle={"Our Social network users:"}/>} />
+            <Route path='/users' render={() => <UsersPage pageTitle={"Our Social network users:"}/>} />
             <Route path='/games' render={() => <Games />} />
             <Route path='/login' render={() => <LoginPage />} />
             <Route path='*' render={() => <div><b>404 PAGE NOT FOUND</b></div>} />

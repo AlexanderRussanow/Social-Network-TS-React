@@ -3,12 +3,12 @@ import { usersAPI } from "./../api/usersAPI";
 import { updateObjectInArray } from "../utils/object-helpers";
 import { UsersType } from "./../types/types";
 import { Dispatch } from "redux";
+import { ResponseType } from "../api/api";
 
-type InitialStateType = typeof initialState;
+export type InitialStateType = typeof initialState;
 type ActionsTypes = InferActionsType<typeof actions>;
-type DispatchType = Dispatch<ActionsTypes>;
 type ThunkType = BaseThunkType<ActionsTypes>
-
+export type FilterType= typeof initialState.filter
 
 let initialState = {
   users: [] as Array<UsersType>,
@@ -17,6 +17,7 @@ let initialState = {
   currentPage: 1,
   isFetching: true,
   followingInProgress: [] as Array<number>, // array of users Id
+  filter: {term: "", friend: null as null | boolean }
 };
 
 const usersReducer = (
@@ -52,6 +53,9 @@ const usersReducer = (
     case "TOGGLE_IS_FETCHING":
       return { ...state, isFetching: action.isFetching };
 
+    case "SET_FILTER":
+      return { ...state, filter: action.payload };
+
     case "TOGGLE_IN_FOLLOWING_PROGRESS":
       return {
         ...state,
@@ -80,15 +84,17 @@ export const actions = {
     ({ type: "TOGGLE_IS_FETCHING", isFetching } as const),
   toggleInFollowingProgress: (isFetching: boolean, userId: number) =>
     ({ type: "TOGGLE_IN_FOLLOWING_PROGRESS", isFetching, userId } as const),
+  setFilter: (filter: FilterType) => ({type: "SET_FILTER", payload: filter} as const)
 };
 
 
 
-export const getUsers = (page: number, pageSize: number): ThunkType => {
+export const getUsers = (page: number, pageSize: number, filter: FilterType): ThunkType => {
   return async (dispatch, getState) => {
     dispatch(actions.toggleIsFetchingt(true));
     dispatch(actions.setCurrentPages(page));
-    let data = await usersAPI.getUsers(page, pageSize);
+    dispatch(actions.setFilter(filter))
+    let data = await usersAPI.getUsers(page, pageSize, filter.term, filter.friend);
     dispatch(actions.toggleIsFetchingt(false));
     dispatch(actions.setUsers(data.items));
     dispatch(actions.setTotalUsersCount(data.totalCount));
@@ -96,15 +102,14 @@ export const getUsers = (page: number, pageSize: number): ThunkType => {
 };
 
 const _followUnfollowFlow = async (
-  dispatch: DispatchType,
+  dispatch: Dispatch<ActionsTypes>,
   userId: number,
-  apiMethod: any,
+  apiMethod: (userID: number) => Promise<ResponseType>,
   actionCreator: (userId: number) => ActionsTypes
-) => {
+  ) => {
   dispatch(actions.toggleInFollowingProgress(true, userId));
-
   let response = await apiMethod(userId);
-  if (response.data.resultCode === 0) {
+  if (response.resultCode == 0) {
     dispatch(actionCreator(userId));
   }
   dispatch(actions.toggleInFollowingProgress(false, userId));
@@ -112,23 +117,13 @@ const _followUnfollowFlow = async (
 
 export const follow = (userId: number): ThunkType => {
   return async (dispatch) => {
-   await _followUnfollowFlow(
-      dispatch,
-      userId,
-      usersAPI.follow.bind(usersAPI),
-      actions.followSuccess
-    );
+   await _followUnfollowFlow(dispatch, userId, usersAPI.follow.bind(usersAPI), actions.followSuccess);
   };
 };
 
 export const unfollow = (userId: number): ThunkType => {
   return async (dispatch) => {
-    await _followUnfollowFlow(
-      dispatch,
-      userId,
-      usersAPI.unfollow.bind(usersAPI),
-      actions.unfollowSuccess
-    );
+    await _followUnfollowFlow(dispatch, userId, usersAPI.unfollow.bind(usersAPI), actions.unfollowSuccess);
   };
 };
 

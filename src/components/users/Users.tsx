@@ -1,29 +1,44 @@
-import React from "react";
-import { UsersType } from "../../types/types";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FilterType, getUsers } from "../../redux/users-Reducers";
+import { getCurrentPageSelector, getFollowingInProgressSelector, getPageSizeSelector, getTotalUsersCountSelector, getUsersFilterSelector, getUsersSuper } from "../../redux/usersSelectors";
 import Paginator from "../common/paginator/Paginator";
 import User from "./User";
+import UsersSearchForm from "./UsersSearchForm";
 
 type PropsType = {
-  totalItemsCount: number
-  pageSize: number 
-  currentPage: number
-  onPageChanged: (pageNumber: number) => void
-  users: Array<UsersType>
-  followingInProgress: Array<number>
-  follow: (userId: number) => void
-  unfollow: (userId: number) => void
-}
+};
 
-let Users: React.FC<PropsType> = ({
-  currentPage,
-  totalItemsCount,
-  pageSize,
-  onPageChanged,
-  users,
-  ...props
-}) => {
+export const Users: React.FC<PropsType> = (props) => {
+
+  useEffect(() => {
+    dispatch(getUsers(currentPage, pageSize, filter));
+  }, [])
+
+  const totalItemsCount = useSelector(getTotalUsersCountSelector)
+  const currentPage = useSelector(getCurrentPageSelector)
+  const pageSize = useSelector(getPageSizeSelector)
+  const filter = useSelector(getUsersFilterSelector)
+  const users = useSelector(getUsersSuper)
+  const followingInProgress = useSelector(getFollowingInProgressSelector)
+  const dispatch = useDispatch()
+  const onPageChanged = (pageNumber: number) => {
+    dispatch(getUsers(pageNumber, pageSize, filter));
+  };
+  const onFilterChanged = (filter: FilterType) => {
+    dispatch(getUsers(1, pageSize, filter))
+  }
+  const follow = (userId: number) => {
+    dispatch(follow(userId))
+  }
+  const unfollow = (userId: number) => {
+    dispatch(unfollow(userId))
+  }
+
   return (
     <div>
+      <UsersSearchForm onFilterChanged={onFilterChanged}/>
+      <br></br>
       <Paginator
         currentPage={currentPage}
         totalItemsCount={totalItemsCount}
@@ -35,9 +50,9 @@ let Users: React.FC<PropsType> = ({
           <User
             user={u}
             key={u.id}
-            followingInProgress={props.followingInProgress}
-            follow={props.follow}
-            unfollow={props.unfollow}
+            followingInProgress={followingInProgress}
+            follow={follow}
+            unfollow={unfollow}
           />
         ))}
       </div>
@@ -45,4 +60,3 @@ let Users: React.FC<PropsType> = ({
   );
 };
 
-export default Users;
