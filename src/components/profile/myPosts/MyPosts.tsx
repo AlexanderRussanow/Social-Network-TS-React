@@ -1,10 +1,12 @@
 import React from "react";
-import { reduxForm, InjectedFormProps } from "redux-form";
-import { PostDataType } from "../../../types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { InjectedFormProps, reduxForm } from "redux-form";
+import { actions } from "../../../redux/profile-Reducer";
+import { AppStateType } from "../../../redux/redux-store";
 import {
   maxLengthCreator,
   minLengthCreator,
-  required,
+  required
 } from "../../../utils/validators/validarot";
 import { createField, TextArea } from "../../common/formControls/formControls";
 import s from "./MyPosts.module.css";
@@ -37,22 +39,35 @@ const AddNewPostFormRedux = reduxForm<AddPostFormValuesType, PropsType>({ form: 
   AddNewPostForm    //redux packing
 );
 
-export type MapMyPostsType = {
-  postData: Array<PostDataType>
-}
+// export type MapMyPostsType = {
+//   postData: Array<PostDataType>
+// }
 
-export type DispatchMyPostsType = {
-  addPost: (newPostText: string) => void
-}
+// export type DispatchMyPostsType = {
+//   addPost: (newPostText: string) => void
+// }
 
-const MyPostsForMemo: React.FC<MapMyPostsType & DispatchMyPostsType> = (props) => {      
-  let postsElements = props.postData.map(p => (
+const MyPostsForMemo: React.FC<PropsType> = (props) => {  
+  
+  // postData: state.profilePage.postData,
+  //   newPostText: state.profilePage.newPostText
+
+  const postData = useSelector((state: AppStateType) => state.profilePage.postData)
+  const newPostText = useSelector((state: AppStateType) => state.profilePage.newPostText)
+
+  const dispatch = useDispatch()
+
+  const onAddPost = () => {
+    dispatch(actions.addPostActionCreator(newPostText))
+  }
+
+  let postsElements = postData.map(p => (
     <Post message={p.message} likeCount={p.like} />
   ));
 
-  let onAddPost = (values: AddPostFormValuesType) => {
-    props.addPost(values.newPostText);
-  };
+  // let onAddPost = (values: AddPostFormValuesType) => {
+  //   props.addPost(values.newPostText);
+  // };
 
   return (
     <div className={s.postBlock}>
@@ -67,4 +82,5 @@ const MyPostsForMemo: React.FC<MapMyPostsType & DispatchMyPostsType> = (props) =
 const MyPosts = React.memo(MyPostsForMemo)
 
 export default MyPosts;
+
 

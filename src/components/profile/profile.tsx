@@ -1,6 +1,6 @@
 import React from "react";
 import { ProfileType } from "../../types/types";
-import MyPostsContainer from "./myPosts/MyPostsContainer";
+import MyPosts from "./myPosts/MyPosts";
 import ProfileInfo from "./profileInfo/profileInfo";
 
 
@@ -24,7 +24,7 @@ const Profile: React.FC<PropsType> = (props) => {
         updateStatus={props.updateStatus}
         saveProfile={props.saveProfile}
       />
-      <MyPostsContainer />
+      <MyPosts />
     </div>
   );
 };

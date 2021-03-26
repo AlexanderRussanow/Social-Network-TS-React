@@ -41,7 +41,7 @@ class App extends Component<MapPropsType & DispatchPropsType> {
   componentDidMount() {
     this.props.initializeApp();
   }
-
+  
   render() {
     if (!this.props.initialized) {
       return <Preloader />;
